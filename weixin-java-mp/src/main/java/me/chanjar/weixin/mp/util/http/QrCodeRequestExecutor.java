@@ -47,7 +47,8 @@ public class QrCodeRequestExecutor implements RequestExecutor<File, WxMpQrCodeTi
       httpGet.setConfig(config);
     }
 
-    try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
+    CloseableHttpResponse response = httpclient.execute(httpGet);
+    try {
       Header[] contentTypeHeader = response.getHeaders("Content-Type");
       if (contentTypeHeader != null && contentTypeHeader.length > 0) {
         // 出错
@@ -60,6 +61,10 @@ public class QrCodeRequestExecutor implements RequestExecutor<File, WxMpQrCodeTi
 
       File localFile = FileUtils.createTmpFile(inputStream, UUID.randomUUID().toString(), "jpg");
       return localFile;
+    }finally{
+    	if (response!=null) {
+    		response.close();
+		}
     }
 
   }

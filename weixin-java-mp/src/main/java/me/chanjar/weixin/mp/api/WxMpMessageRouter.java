@@ -58,65 +58,31 @@ public class WxMpMessageRouter {
 
   private final WxMpService wxMpService;
 
-  private ExecutorService executorService;
+//  private ExecutorService executorService;
 
-  private WxMessageDuplicateChecker messageDuplicateChecker;
+//  private WxMessageDuplicateChecker messageDuplicateChecker;
 
-  private WxSessionManager sessionManager;
+//  private WxSessionManager sessionManager;
 
-  private WxErrorExceptionHandler exceptionHandler;
+//  private WxErrorExceptionHandler exceptionHandler;
 
   public WxMpMessageRouter(WxMpService wxMpService) {
     this.wxMpService = wxMpService;
-    this.executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
-    this.messageDuplicateChecker = new WxMessageInMemoryDuplicateChecker();
-    this.sessionManager = new StandardSessionManager();
-    this.exceptionHandler = new LogExceptionHandler();
+//    this.executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
+//    this.messageDuplicateChecker = new WxMessageInMemoryDuplicateChecker();
+//    this.sessionManager = new StandardSessionManager();
+//    this.exceptionHandler = new LogExceptionHandler();
   }
 
-  /**
-   * <pre>
-   * 设置自定义的 {@link ExecutorService}
-   * 如果不调用该方法，默认使用 Executors.newFixedThreadPool(100)
-   * </pre>
-   * @param executorService
-   */
-  public void setExecutorService(ExecutorService executorService) {
-    this.executorService = executorService;
+  public WxMpMessageRouter(WxMpService wxMpService,String temp){
+	  this.wxMpService = wxMpService;
   }
+  
+  
 
-  /**
-   * <pre>
-   * 设置自定义的 {@link me.chanjar.weixin.common.api.WxMessageDuplicateChecker}
-   * 如果不调用该方法，默认使用 {@link me.chanjar.weixin.common.api.WxMessageInMemoryDuplicateChecker}
-   * </pre>
-   * @param messageDuplicateChecker
-   */
-  public void setMessageDuplicateChecker(WxMessageDuplicateChecker messageDuplicateChecker) {
-    this.messageDuplicateChecker = messageDuplicateChecker;
-  }
+  
 
-  /**
-   * <pre>
-   * 设置自定义的{@link me.chanjar.weixin.common.session.WxSessionManager}
-   * 如果不调用该方法，默认使用 {@link me.chanjar.weixin.common.session.StandardSessionManager}
-   * </pre>
-   * @param sessionManager
-   */
-  public void setSessionManager(WxSessionManager sessionManager) {
-    this.sessionManager = sessionManager;
-  }
-
-  /**
-   * <pre>
-   * 设置自定义的{@link me.chanjar.weixin.common.api.WxErrorExceptionHandler}
-   * 如果不调用该方法，默认使用 {@link me.chanjar.weixin.common.util.LogExceptionHandler}
-   * </pre>
-   * @param exceptionHandler
-   */
-  public void setExceptionHandler(WxErrorExceptionHandler exceptionHandler) {
-    this.exceptionHandler = exceptionHandler;
-  }
+  
 
   List<WxMpMessageRouterRule> getRules() {
     return this.rules;
@@ -157,76 +123,39 @@ public class WxMpMessageRouter {
 
     WxMpXmlOutMessage res = null;
     final List<Future> futures = new ArrayList<Future>();
-    for (final WxMpMessageRouterRule rule : matchRules) {
-      // 返回最后一个非异步的rule的执行结果
-      if(rule.isAsync()) {
-        futures.add(
-            executorService.submit(new Runnable() {
-              public void run() {
-                rule.service(wxMessage, wxMpService, sessionManager, exceptionHandler);
-              }
-            })
-        );
-      } else {
-        res = rule.service(wxMessage, wxMpService, sessionManager, exceptionHandler);
-        // 在同步操作结束，session访问结束
-        log.debug("End session access: async=false, sessionId={}", wxMessage.getFromUserName());
-        sessionEndAccess(wxMessage);
-      }
-    }
+		for (final WxMpMessageRouterRule rule : matchRules) {
+			// 返回最后一个非异步的rule的执行结果
 
-    if (futures.size() > 0) {
-      executorService.submit(new Runnable() {
-        @Override
-        public void run() {
-          for (Future future : futures) {
-            try {
-              future.get();
-              log.debug("End session access: async=true, sessionId={}", wxMessage.getFromUserName());
-              // 异步操作结束，session访问结束
-              sessionEndAccess(wxMessage);
-            } catch (InterruptedException e) {
-              log.error("Error happened when wait task finish", e);
-            } catch (ExecutionException e) {
-              log.error("Error happened when wait task finish", e);
-            }
-          }
-        }
-      });
-    }
+			res = rule.service(wxMessage, wxMpService, null,
+					null);
+			// 在同步操作结束，session访问结束
+			log.debug("End session access: async=false, sessionId={}",
+					wxMessage.getFromUserName());
+//			sessionEndAccess(wxMessage);
+		}
+
     return res;
   }
 
   protected boolean isDuplicateMessage(WxMpXmlMessage wxMessage) {
-
-    String messageId = "";
-    if (wxMessage.getMsgId() == null) {
-      messageId = String.valueOf(wxMessage.getCreateTime())
-          + "-" + wxMessage.getFromUserName()
-          + "-" + String.valueOf(wxMessage.getEventKey() == null ? "" : wxMessage.getEventKey())
-          + "-" + String.valueOf(wxMessage.getEvent() == null ? "" : wxMessage.getEvent())
-      ;
-    } else {
-      messageId = String.valueOf(wxMessage.getMsgId());
-    }
-
-    if (messageDuplicateChecker.isDuplicate(messageId)) {
-      return true;
-    }
+	  //接到就处理,不管重复了
+//    String messageId = "";
+//    if (wxMessage.getMsgId() == null) {
+//      messageId = String.valueOf(wxMessage.getCreateTime())
+//          + "-" + wxMessage.getFromUserName()
+//          + "-" + String.valueOf(wxMessage.getEventKey() == null ? "" : wxMessage.getEventKey())
+//          + "-" + String.valueOf(wxMessage.getEvent() == null ? "" : wxMessage.getEvent())
+//      ;
+//    } else {
+//      messageId = String.valueOf(wxMessage.getMsgId());
+//    }
+//
+//    if (messageDuplicateChecker !=null && messageDuplicateChecker.isDuplicate(messageId)) {
+//      return true;
+//    }
     return false;
 
   }
 
-  /**
-   * 对session的访问结束
-   * @param wxMessage
-   */
-  protected void sessionEndAccess(WxMpXmlMessage wxMessage) {
-
-    InternalSession session = ((InternalSessionManager)sessionManager).findSession(wxMessage.getFromUserName());
-    if (session != null) {
-      session.endAccess();
-    }
-
-  }
+  
 }
