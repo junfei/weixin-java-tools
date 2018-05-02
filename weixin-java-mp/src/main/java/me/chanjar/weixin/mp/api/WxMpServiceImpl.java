@@ -106,7 +106,7 @@ import com.thoughtworks.xstream.XStream;
 
 public class WxMpServiceImpl implements WxMpService {
 	
-  public final static String weixinhttps = "http://api.weixin.qq.com/";
+  public final static String weixinhttps = "https://api.weixin.qq.com/";
   public final static String weixinhttpfile = "http://file.api.weixin.qq.com/";
 
   protected final Logger log = LoggerFactory.getLogger(WxMpServiceImpl.class);
