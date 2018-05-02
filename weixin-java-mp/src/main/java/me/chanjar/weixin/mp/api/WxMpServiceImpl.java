@@ -490,7 +490,41 @@ public class WxMpServiceImpl implements WxMpService {
     return WxMpQrCodeTicket.fromJson(responseContent);
   }
 
-  public WxMpQrCodeTicket qrCodeCreateLastTicket(int scene_id) throws WxErrorException {
+    @Override
+    public WxMpQrCodeTicket qrCodeCreateTmpTicket(long scene_id, Integer expire_seconds) throws WxErrorException {
+        String url = weixinhttps+"cgi-bin/qrcode/create";
+        JsonObject json = new JsonObject();
+        json.addProperty("action_name", "QR_SCENE");
+        if (expire_seconds != null) {
+            json.addProperty("expire_seconds", expire_seconds);
+        }
+        JsonObject actionInfo = new JsonObject();
+        JsonObject scene = new JsonObject();
+        scene.addProperty("scene_id", scene_id);
+        actionInfo.add("scene", scene);
+        json.add("action_info", actionInfo);
+        String responseContent = execute(new SimplePostRequestExecutor(), url, json.toString());
+        return WxMpQrCodeTicket.fromJson(responseContent);
+    }
+
+    @Override
+    public WxMpQrCodeTicket qrCodeCreateTmpTicket(String scene_id, Integer expire_seconds) throws WxErrorException {
+        String url = weixinhttps+"cgi-bin/qrcode/create";
+        JsonObject json = new JsonObject();
+        json.addProperty("action_name", "QR_STR_SCENE");
+        if (expire_seconds != null) {
+            json.addProperty("expire_seconds", expire_seconds);
+        }
+        JsonObject actionInfo = new JsonObject();
+        JsonObject scene = new JsonObject();
+        scene.addProperty("scene_str", scene_id);
+        actionInfo.add("scene", scene);
+        json.add("action_info", actionInfo);
+        String responseContent = execute(new SimplePostRequestExecutor(), url, json.toString());
+        return WxMpQrCodeTicket.fromJson(responseContent);
+    }
+
+    public WxMpQrCodeTicket qrCodeCreateLastTicket(int scene_id) throws WxErrorException {
     String url = weixinhttps+"cgi-bin/qrcode/create";
     JsonObject json = new JsonObject();
     json.addProperty("action_name", "QR_LIMIT_SCENE");

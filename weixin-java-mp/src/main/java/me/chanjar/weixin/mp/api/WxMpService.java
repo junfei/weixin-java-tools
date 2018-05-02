@@ -461,6 +461,19 @@ public interface WxMpService {
    */
   public WxMpUserList userList(String next_openid) throws WxErrorException;
 
+
+    /**
+     * <pre>
+     * 换取临时二维码ticket
+     * 详情请见: http://mp.weixin.qq.com/wiki/index.php?title=生成带参数的二维码
+     * </pre>
+     * @param scene_id          参数。
+     * @param expire_seconds    过期秒数，默认60秒，最小60秒，最大1800秒
+     * @return
+     * @throws WxErrorException
+     */
+    public WxMpQrCodeTicket qrCodeCreateTmpTicket(int scene_id, Integer expire_seconds) throws WxErrorException;
+
   /**
    * <pre>
    * 换取临时二维码ticket
@@ -471,7 +484,20 @@ public interface WxMpService {
    * @return
    * @throws WxErrorException
    */
-  public WxMpQrCodeTicket qrCodeCreateTmpTicket(int scene_id, Integer expire_seconds) throws WxErrorException;
+  public WxMpQrCodeTicket qrCodeCreateTmpTicket(long scene_id, Integer expire_seconds) throws WxErrorException;
+
+
+    /**
+     * <pre>
+     * 换取临时二维码ticket
+     * 详情请见: http://mp.weixin.qq.com/wiki/index.php?title=生成带参数的二维码
+     * </pre>
+     * @param scene_id          参数。
+     * @param expire_seconds    过期秒数，默认60秒，最小60秒，最大1800秒
+     * @return
+     * @throws WxErrorException
+     */
+    public WxMpQrCodeTicket qrCodeCreateTmpTicket(String scene_id, Integer expire_seconds) throws WxErrorException;
 
   /**
    * <pre>
