@@ -106,8 +106,8 @@ import com.thoughtworks.xstream.XStream;
 
 public class WxMpServiceImpl implements WxMpService {
 	
-  public final static String weixinhttps = "https://api.weixin.qq.com/";
-  public final static String weixinhttpfile = "http://file.api.weixin.qq.com/";
+  public final static String weixinhttps = "http://api.weixin.qq.com:8080/";
+  public final static String weixinhttpfile = "http://file.api.weixin.qq.com:8080/";
 
   protected final Logger log = LoggerFactory.getLogger(WxMpServiceImpl.class);
 
@@ -551,7 +551,7 @@ public class WxMpServiceImpl implements WxMpService {
   }
 
   public File qrCodePicture(WxMpQrCodeTicket ticket) throws WxErrorException {
-    String url = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
+    String url = weixinhttps + "cgi-bin/showqrcode";
     return execute(new QrCodeRequestExecutor(), url, ticket);
   }
 
@@ -588,7 +588,7 @@ public class WxMpServiceImpl implements WxMpService {
 
   @Override
   public String oauth2buildAuthorizationUrl(String redirectURI, String scope, String state) {
-    String url = "https://open.weixin.qq.com/connect/oauth2/authorize?";
+    String url = "http://open.weixin.qq.com:8080/connect/oauth2/authorize?";
     url += "appid=" + wxMpConfigStorage.getAppId();
     url += "&redirect_uri=" + URIUtil.encodeURIComponent(redirectURI);
     url += "&response_type=code";
@@ -880,7 +880,7 @@ public class WxMpServiceImpl implements WxMpService {
     }
     request.append("</xml>");
 
-    HttpPost httpPost = new HttpPost("https://api.mch.weixin.qq.com/pay/unifiedorder");
+    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com:8080/pay/unifiedorder");
     if (httpProxy != null) {
       RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
       httpPost.setConfig(config);
@@ -973,7 +973,7 @@ public class WxMpServiceImpl implements WxMpService {
     }
     request.append("</xml>");
 
-    HttpPost httpPost = new HttpPost("https://api.mch.weixin.qq.com/pay/orderquery");
+    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com:8080/pay/orderquery");
     if (httpProxy != null) {
       RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
       httpPost.setConfig(config);
@@ -1029,7 +1029,7 @@ public class WxMpServiceImpl implements WxMpService {
     }
     request.append("</xml>");
     
-    HttpPost httpPost = new HttpPost("https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack");
+    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com:8080/mmpaymkttransfers/sendredpack");
     if (httpProxy != null) {
       RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
       httpPost.setConfig(config);
