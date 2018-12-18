@@ -106,8 +106,8 @@ import com.thoughtworks.xstream.XStream;
 
 public class WxMpServiceImpl implements WxMpService {
 	
-  public final static String weixinhttps = "http://api.weixin.qq.com:8080/";
-  public final static String weixinhttpfile = "http://file.api.weixin.qq.com:8080/";
+  public final static String weixinhttps = "http://api.weixin.qq.com/";
+  public final static String weixinhttpfile = "http://file.api.weixin.qq.com/";
 
   protected final Logger log = LoggerFactory.getLogger(WxMpServiceImpl.class);
 
@@ -880,7 +880,7 @@ public class WxMpServiceImpl implements WxMpService {
     }
     request.append("</xml>");
 
-    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com:8080/pay/unifiedorder");
+    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com/pay/unifiedorder");
     if (httpProxy != null) {
       RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
       httpPost.setConfig(config);
@@ -973,7 +973,7 @@ public class WxMpServiceImpl implements WxMpService {
     }
     request.append("</xml>");
 
-    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com:8080/pay/orderquery");
+    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com/pay/orderquery");
     if (httpProxy != null) {
       RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
       httpPost.setConfig(config);
@@ -1029,7 +1029,7 @@ public class WxMpServiceImpl implements WxMpService {
     }
     request.append("</xml>");
     
-    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com:8080/mmpaymkttransfers/sendredpack");
+    HttpPost httpPost = new HttpPost("http://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack");
     if (httpProxy != null) {
       RequestConfig config = RequestConfig.custom().setProxy(httpProxy).build();
       httpPost.setConfig(config);
